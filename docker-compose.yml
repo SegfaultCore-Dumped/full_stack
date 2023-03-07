@@ -1,0 +1,49 @@
+version: "3"
+services:
+  react:
+    build:
+      context: ./front
+      dockerfile: Dockerfile-react
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+  node:
+    depends_on:
+      mysql:
+        condition: service_healthy
+    build:
+      context: ./back
+      dockerfile: Dockerfile-node
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=mysql
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=database_test_fsexperience_back_end
+  mysql:
+    image: mysql:5.7
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=database_test_fsexperience_back_end
+    volumes:
+      - my-db:/var/lib/mysql
+      - ./back/sql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    ports:
+      - "8080:80"
+volumes:
+  my-db:
