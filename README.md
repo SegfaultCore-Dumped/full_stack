@@ -2,4 +2,4 @@
 
 ## Getting started
 
-'''docker-compose up -d --build'''
+`docker-compose up -d --build`
