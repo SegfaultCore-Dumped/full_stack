@@ -5,7 +5,7 @@ services:
       context: ./front
       dockerfile: Dockerfile-react
     ports:
-      - "3000:3000"
+      - "80:3000"
     environment:
       - NODE_ENV=development
   node:
@@ -23,6 +23,8 @@ services:
       - DB_USER=root
       - DB_PASSWORD=root
       - DB_NAME=database_test_fsexperience_back_end
+      - CORS_ORIGIN=http://localhost:3000
+      - CORS_HEADERS=Content-Type, Authorization
   mysql:
     image: mysql:5.7
     restart: always

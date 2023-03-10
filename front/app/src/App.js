@@ -17,8 +17,6 @@ const theme = createTheme({
 function App() {
   const { isLogged } = useSelector((state) => state.authReducer);
 
-  console.log(isLogged);
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

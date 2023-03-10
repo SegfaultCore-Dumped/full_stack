@@ -16,14 +16,31 @@ import { setUserLoggedIn } from '../Reducers/Actions/AuthAction';
 
 export default function Login() {
   const dispatch = useDispatch();
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-    dispatch(setUserLoggedIn());
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get('email');
+    const password = formData.get('password');
+
+    try {
+      const response = await fetch('http://localhost:3001/api/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message);
+      }
+      const data = await response.json();
+      localStorage.setItem('token', data.token);
+      dispatch(setUserLoggedIn());
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

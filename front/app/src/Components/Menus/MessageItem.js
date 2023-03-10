@@ -5,13 +5,15 @@ import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import React from 'react';
+import PropTypes from 'prop-types';
 
-export default function MessageItem() {
+export default function MessageItem({ setSelectedIndex }) {
   return (
     <List
       sx={{
         '.MuiListItem-padding': { padding: '0px 0px 0px 0px' },
       }}
+      onClick={() => setSelectedIndex(0)}
     >
       <ListItem alignItems="flex-start">
         <ListItemAvatar>
@@ -27,3 +29,7 @@ export default function MessageItem() {
     </List>
   );
 }
+
+MessageItem.propTypes = {
+  setSelectedIndex: PropTypes.func.isRequired,
+};

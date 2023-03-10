@@ -9,17 +9,38 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import { useDispatch } from 'react-redux';
+import { setUserLoggedIn } from '../Reducers/Actions/AuthAction';
 
 export default function SignUp() {
-  const handleSubmit = (event) => {
+  const dispatch = useDispatch();
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get('email');
+    const username = formData.get('firstName');
+    const password = formData.get('password');
 
+    try {
+      const response = await fetch('http://localhost:3001/api/users/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, username, password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message);
+      }
+      const data = await response.json();
+      localStorage.setItem('token', data.token);
+      dispatch(setUserLoggedIn());
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />

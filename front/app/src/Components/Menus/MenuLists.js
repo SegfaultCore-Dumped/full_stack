@@ -5,28 +5,28 @@ import Divider from '@mui/material/Divider';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useTheme } from '@mui/styles';
-import MessageItem from './MessageItem';
+// import MessageItem from './MessageItem';
 import SearchBar from '../SearchBar';
 import MessageGroupItem from './MessageGroupItem';
 
-function MenuButtons({ setSelectedIndex }) {
+function MenuButtons({ handleMenuItemClick }) {
   return (
     <Stack
       direction="row"
       justifyContent="space-between"
       alignItems="center"
-      spacing={2}
+      spacing={1}
       pt={1}
     >
       <Button
         variant="contained"
         color="neutral"
         sx={{ fontSize: 10 }}
-        onClick={() => setSelectedIndex(0)}
+        onClick={() => handleMenuItemClick(0)}
       >
-        Direct Messages
+        Home
       </Button>
-      <Button
+      {/* <Button
         variant="contained"
         color="neutral"
         sx={{
@@ -34,21 +34,22 @@ function MenuButtons({ setSelectedIndex }) {
         }}
         onClick={() => setSelectedIndex(1)}
       >
-        Group Chats
-      </Button>
+        Rooms
+      </Button> */}
     </Stack>
-
   );
 }
 
 MenuButtons.propTypes = {
-  setSelectedIndex: PropTypes.func.isRequired,
+  handleMenuItemClick: PropTypes.func.isRequired,
 };
 
-export default function MenuLists() {
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
+export default function MenuLists({ setSelectedIndex, setSelectedIListItem }) {
   const theme = useTheme();
-
+  const handleMenuItemClick = (index) => {
+    setSelectedIndex(index);
+    setSelectedIListItem(0);
+  };
   return (
     <Box
       sx={{
@@ -59,10 +60,15 @@ export default function MenuLists() {
       <div style={{ padding: 15 }}>
         <SearchBar />
         <Divider sx={{ padding: 0.5 }} />
-        <MenuButtons setSelectedIndex={setSelectedIndex} />
-        {selectedIndex === 0 ? <MessageItem /> : null}
-        {selectedIndex === 1 ? <MessageGroupItem /> : null}
+        <MenuButtons handleMenuItemClick={handleMenuItemClick} />
+        {/* <MessageItem setSelectedIndex={setSelectedIndex} /> */}
+        <MessageGroupItem setSelectedIListItem={setSelectedIListItem} />
       </div>
     </Box>
   );
 }
+
+MenuLists.propTypes = {
+  setSelectedIndex: PropTypes.func.isRequired,
+  setSelectedIListItem: PropTypes.func.isRequired,
+};
